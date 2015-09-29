@@ -1,0 +1,35 @@
+main: com.subtextgroup.mcp.pg.PurtyGlass
+name: PurtyGlass
+version: 1.0
+softdepend: [WorldEdit]
+author: ryanjohnson
+description: Gives ya purty glass
+commands:
+  purtyglassblock:
+    description: Makes a single glass block purty
+    usage: |
+      /purtyglassblock [ticks between changes, at least 10]
+    aliases: pgb
+    permission: purtyglass.singleblock
+    permission-message: You don't have the purtyglass.singleblock permission!
+  selpurtyglassblock:
+    description: Makes a WorldEdit selection into purty glass blocks
+    usage: |
+      /selpurtyglassblock [ticks between changes, at least 10]
+    aliases: spgb
+    permission: purtyglass.selblock
+    permission-message: You don't have the purtyglass.selblock permission!
+  purtyglasspane:
+    description: Makes a single glass pane purty
+    usage: |
+      /purtyglasspane [ticks between changes, at least 10]
+    aliases: pgp
+    permission: purtyglass.singlepane
+    permission-message: You don't have the purtyglass.singlepane permission!
+  selpurtyglasspane:
+    description: Makes a WorldEdit selection into purty glass panes
+    usage: |
+      /selpurtyglasspane [ticks between changes, at least 10]
+    aliases: spgp
+    permission: purtyglass.selpane
+    permission-message: You don't have the purtyglass.selpane permission!
