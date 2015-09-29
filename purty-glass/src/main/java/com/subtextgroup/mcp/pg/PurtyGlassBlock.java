@@ -10,13 +10,13 @@ import org.bukkit.configuration.serialization.SerializableAs;
 @SerializableAs("purty-glass-block")
 public class PurtyGlassBlock implements ConfigurationSerializable{
 	private Location loc;
-	private Long ticks;
+	private Integer ticks;
 
 	public PurtyGlassBlock(Map<String, Object> props) {
 		this.loc = Location.deserialize((Map<String, Object>)props.get("loc"));
-		this.ticks = (Long)props.get("ticks");
+		this.ticks = (Integer)props.get("ticks");
 	}
-	public PurtyGlassBlock(Location loc, Long ticks) {
+	public PurtyGlassBlock(Location loc, Integer ticks) {
 		this.loc = loc;
 		this.ticks = ticks;
 		
@@ -29,10 +29,10 @@ public class PurtyGlassBlock implements ConfigurationSerializable{
 	public void setLoc(Location loc) {
 		this.loc = loc;
 	}
-	public Long getTicks() {
+	public Integer getTicks() {
 		return ticks;
 	}
-	public void setTicks(Long ticks) {
+	public void setTicks(Integer ticks) {
 		this.ticks = ticks;
 	}
 	

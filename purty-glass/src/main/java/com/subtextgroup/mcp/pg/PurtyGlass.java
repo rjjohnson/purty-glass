@@ -11,14 +11,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.material.MaterialData;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -47,7 +45,7 @@ public class PurtyGlass extends JavaPlugin {
     private static class RangeException extends Exception {
     }
 
-    private boolean singlePurtyGlassBlock(CommandSender sender, Command command, Long ticks) {
+    private boolean singlePurtyGlassBlock(CommandSender sender, Command command, Integer ticks) {
         Player player = (Player) sender;
         Block target = player.getTargetBlock((Set) null, 10);
         if (target == null) {
@@ -57,11 +55,11 @@ public class PurtyGlass extends JavaPlugin {
         return true;
     }
 
-    private boolean singlePurtyGlassPane(CommandSender sender, Command command, Long ticks) {
+    private boolean singlePurtyGlassPane(CommandSender sender, Command command, Integer ticks) {
         return false;
     }
 
-    private boolean selectionPurtyGlassBlock(CommandSender sender, Command command, Long ticks) {
+    private boolean selectionPurtyGlassBlock(CommandSender sender, Command command, Integer ticks) {
 
         List<Block> blocks = getWorldEditBlocks(sender);
         if (blocks != null && blocks.size() > 0) {
@@ -73,12 +71,16 @@ public class PurtyGlass extends JavaPlugin {
         return false;
     }
 
-    private boolean selectionPurtyGlassPane(CommandSender sender, Command command, Long ticks) {
+    private boolean selectionPurtyGlassPane(CommandSender sender, Command command, Integer ticks) {
         return false;
     }
 
     private List<Block> getWorldEditBlocks(CommandSender sender) {
         try {
+            if(!isWorldEditAvailable()) {
+                sender.sendMessage("WorldEdit not available");
+                return null;
+            }
             WorldEditIntegration wei = new WorldEditIntegration();
             return wei.getSelectedBlocks((Player) sender);
         } catch (ClassNotFoundException cnfe) {
@@ -87,7 +89,15 @@ public class PurtyGlass extends JavaPlugin {
         }
     }
 
-    private void makePurtyGlassBlock(Block block, Long ticks) {
+    private static boolean isWorldEditAvailable() {
+        try {
+            Class.forName("com.sk89q.worldedit.bukkit.WorldEditPlugin", false, PurtyGlass.class.getClassLoader());
+            return true;
+         } catch(ClassNotFoundException e) {
+            return false;
+         }
+    }
+    private void makePurtyGlassBlock(Block block, Integer ticks) {
         List<PurtyGlassBlock> purtyGlassBlocks = (List<PurtyGlassBlock>) getConfig().getList("purty-glass-blocks", new ArrayList<PurtyGlassBlock>());
         if (!containsLocation(purtyGlassBlocks, block.getLocation())) {
             PurtyGlassBlock pgb = new PurtyGlassBlock(block.getLocation(), ticks);
@@ -132,10 +142,10 @@ public class PurtyGlass extends JavaPlugin {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        Long ticks = 10L;
+        Integer ticks = 10;
         if (args.length == 1) {
             try {
-                ticks = Long.parseLong(args[0]);
+                ticks = Integer.parseInt(args[0]);
                 if (ticks < 10) {
                     throw new RangeException();
                 }
@@ -202,12 +212,12 @@ public class PurtyGlass extends JavaPlugin {
                 }
                 currentTicks++;
             }
-        }, 30, 10);
+        }, 30, 1);
         
         getServer().broadcastMessage("PurtyGlass enabled!");
     }
     private static class TickMeta {
-        public Long schedule = 10L;
+        public Integer schedule = 10;
         public Long lastRun = 0L;
         public Integer lastColorIdx = 0;
     }
