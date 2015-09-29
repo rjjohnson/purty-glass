@@ -56,7 +56,13 @@ public class PurtyGlass extends JavaPlugin {
     }
 
     private boolean singlePurtyGlassPane(CommandSender sender, Command command, Integer ticks) {
-        return false;
+        Player player = (Player) sender;
+        Block target = player.getTargetBlock((Set) null, 10);
+        if (target == null) {
+            return false;
+        }
+        makePurtyGlassPane(target, ticks);
+        return true;
     }
 
     private boolean selectionPurtyGlassBlock(CommandSender sender, Command command, Integer ticks) {
@@ -72,6 +78,13 @@ public class PurtyGlass extends JavaPlugin {
     }
 
     private boolean selectionPurtyGlassPane(CommandSender sender, Command command, Integer ticks) {
+        List<Block> blocks = getWorldEditBlocks(sender);
+        if (blocks != null && blocks.size() > 0) {
+            for (Block block : blocks) {
+                makePurtyGlassPane(block, ticks);
+            }
+            return true;
+        }
         return false;
     }
 
@@ -103,10 +116,18 @@ public class PurtyGlass extends JavaPlugin {
             PurtyGlassBlock pgb = new PurtyGlassBlock(block.getLocation(), ticks);
             purtyGlassBlocks.add(pgb);
             block.setType(Material.STAINED_GLASS);
-            //scheduleBlock(block, ticks);
             activePurtyGlassBlocks.add(pgb);
             getConfig().set("purty-glass-blocks", purtyGlassBlocks);
-            // saveConfig();
+        }
+    }
+    private void makePurtyGlassPane(Block block, Integer ticks) {
+        List<PurtyGlassBlock> purtyGlassBlocks = (List<PurtyGlassBlock>) getConfig().getList("purty-glass-blocks", new ArrayList<PurtyGlassBlock>());
+        if (!containsLocation(purtyGlassBlocks, block.getLocation())) {
+            PurtyGlassBlock pgb = new PurtyGlassBlock(block.getLocation(), ticks);
+            purtyGlassBlocks.add(pgb);
+            block.setType(Material.STAINED_GLASS_PANE);
+            activePurtyGlassBlocks.add(pgb);
+            getConfig().set("purty-glass-blocks", purtyGlassBlocks);
         }
     }
 
