@@ -116,7 +116,9 @@ public class PurtyGlass extends JavaPlugin {
             PurtyGlassBlock pgb = new PurtyGlassBlock(block.getLocation(), ticks);
             purtyGlassBlocks.add(pgb);
             block.setType(Material.STAINED_GLASS);
+            block.setMetadata("purty-glass", new FixedMetadataValue(this, ticks));
             activePurtyGlassBlocks.add(pgb);
+            
             getConfig().set("purty-glass-blocks", purtyGlassBlocks);
         }
     }
@@ -126,6 +128,7 @@ public class PurtyGlass extends JavaPlugin {
             PurtyGlassBlock pgb = new PurtyGlassBlock(block.getLocation(), ticks);
             purtyGlassBlocks.add(pgb);
             block.setType(Material.STAINED_GLASS_PANE);
+            block.setMetadata("purty-glass", new FixedMetadataValue(this, ticks));
             activePurtyGlassBlocks.add(pgb);
             getConfig().set("purty-glass-blocks", purtyGlassBlocks);
         }
